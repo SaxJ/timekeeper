@@ -7,6 +7,9 @@ export = (app: Probot) => {
     });
     await context.octokit.issues.createComment(issueComment);
   });
+  app.on("pull_request", async (context) => {
+    console.log(JSON.stringify(context));
+  });
   // For more information on building apps:
   // https://probot.github.io/docs/
 
