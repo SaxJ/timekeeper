@@ -98,7 +98,7 @@ export = (app: Probot) => {
         head_branch: "",
         head_sha: context.payload.pull_request.head.sha,
         status: currentIsGood ? 'completed' : 'in_progress',
-        conclusion: 'success',
+        conclusion: currentIsGood ? 'success' : 'failure',
         started_at: (new Date()).toISOString(),
         output: {
           title: currentIsGood ? 'The time is right' : "Don't deploy after-hours!",
