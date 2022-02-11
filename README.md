@@ -1,6 +1,6 @@
 # timekeeper
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that Allow merges only during specified times
+> Allow merges only during specified times
 
 ## Setup
 
