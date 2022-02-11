@@ -44,6 +44,7 @@ export = (app: Probot) => {
 
     const loadedConfig = await context.config<TimekeeperConfig>('timekeeper.yml');
     if (loadedConfig === null) {
+      context.log.warn('No config loaded');
       return;
     }
 
