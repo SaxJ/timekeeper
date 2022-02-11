@@ -34,6 +34,8 @@ interface TimekeeperConfig {
 
 export = (app: Probot) => {
   app.on("pull_request", async (context) => {
+    context.log.info('Actioning pull request', {pr: context.pullRequest.name});
+
     const checkList = await context.octokit.checks.listForRef(
       context.repo({
         ref: context.payload.pull_request.head.sha,
