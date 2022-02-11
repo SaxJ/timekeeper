@@ -31,8 +31,6 @@ sunday:
   to: '17:00'
 ```
 
-`
-
 ## Development
 
 ### Setup
