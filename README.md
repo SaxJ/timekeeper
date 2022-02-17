@@ -42,8 +42,6 @@ days:
     closed: true
 ```
 
-`
-
 ## Development
 
 ### Setup
