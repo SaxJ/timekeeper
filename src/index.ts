@@ -1,36 +1,5 @@
 import { Probot } from "probot";
-
-interface TimekeeperConfig {
-  timezone: string;
-  monday: {
-    from: string;
-    to: string;
-  };
-  tuesday: {
-    from: string;
-    to: string;
-  };
-  wednesday: {
-    from: string;
-    to: string;
-  };
-  thursday: {
-    from: string;
-    to: string;
-  };
-  friday: {
-    from: string;
-    to: string;
-  };
-  saturday: {
-    from: string;
-    to: string;
-  };
-  sunday: {
-    from: string;
-    to: string;
-  };
-};
+import {getCheckSummary, getCheckTitle, getDayDefinition, getShortCircuits, TimekeeperConfig, Weekday} from './config';
 
 export = (app: Probot) => {
   app.on("pull_request", async (context) => {
@@ -50,59 +19,30 @@ export = (app: Probot) => {
       return;
     }
 
+    const shortCircuits = getShortCircuits(loadedConfig);
+    const shouldShortCircuit = !!shortCircuits.find(word => context.payload.pull_request.title.includes(word));
+
     const now = (new Date()).toLocaleTimeString('en-GB', {timeZone: loadedConfig.timezone});
     const today = (new Date()).toLocaleDateString('en-GB', {timeZone: loadedConfig.timezone, weekday: 'long'}).toLowerCase();
 
-    let from = '09:00:00';
-    let to = '17:00:00';
-
-    switch (today) {
-        case 'sunday':
-          from = loadedConfig.sunday.from;
-          to = loadedConfig.sunday.to;
-          break;
-        case 'monday':
-          from = loadedConfig.monday.from;
-          to = loadedConfig.monday.to;
-          break;
-        case 'tuesday':
-          from = loadedConfig.tuesday.from;
-          to = loadedConfig.tuesday.to;
-          break;
-        case 'wednesday':
-          from = loadedConfig.wednesday.from;
-          to = loadedConfig.wednesday.to;
-          break;
-        case 'thursday':
-          from = loadedConfig.thursday.from;
-          to = loadedConfig.thursday.to;
-          break;
-        case 'friday':
-          from = loadedConfig.friday.from;
-          to = loadedConfig.friday.to;
-          break;
-        case 'saturday':
-          from = loadedConfig.saturday.from;
-          to = loadedConfig.saturday.to;
-          break;
-    }
+    const todayDefinition = getDayDefinition(loadedConfig, today as Weekday);
 
     const noExistingCheck = checkRuns.length === 0;
     const lastIsGood = checkRuns[0]?.conclusion === 'success';
 
-    const currentIsGood = now >= from && now <= to;
+    const deployAllowed = (now >= todayDefinition.from && now <= todayDefinition.to && !todayDefinition.closed) || shouldShortCircuit;
 
-    if (noExistingCheck || lastIsGood !== currentIsGood) {
+    if (noExistingCheck || lastIsGood !== deployAllowed) {
       context.octokit.checks.create(context.repo({
         name: "timekeeper",
         head_branch: "",
         head_sha: context.payload.pull_request.head.sha,
-        status: currentIsGood ? 'completed' : 'in_progress',
-        conclusion: currentIsGood ? 'success' : 'failure',
+        status: deployAllowed ? 'completed' : 'in_progress',
+        conclusion: deployAllowed ? 'success' : 'failure',
         started_at: (new Date()).toISOString(),
         output: {
-          title: currentIsGood ? 'The time is right' : "Don't deploy after-hours!",
-          summary: currentIsGood ? 'All g' : "The time is not right",
+          title: getCheckTitle(loadedConfig, deployAllowed),
+          summary: getCheckSummary(loadedConfig, deployAllowed),
           text: "",
         },
         request: {

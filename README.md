@@ -7,28 +7,39 @@
 To use this bot, install it on the repositories you want to keep time on, and configure the hours to allow pull requests with a yaml file in `.github/timekeeper.yml`.
 
 ``` yaml
+shortcircuit: 'hotfix;fix;urgent' #skip timekeeper if these words are contained in the PR title
 timezone: 'Australia/Perth'
-monday:
-  from: '09:00'
-  to: '17:00'
-tuesday:
-  from: '09:00'
-  to: '17:00'
-wednesday:
-  from: '09:00'
-  to: '17:00'
-thursday:
-  from: '09:00'
-  to: '17:00'
-friday:
-  from: '09:00'
-  to: '20:00'
-saturday:
-  from: '09:00'
-  to: '17:00'
-sunday:
-  from: '09:00'
-  to: '17:00'
+checkTitle:
+  allowed: 'The title of an approved check'
+  declined: 'The title of a declined check'
+checkSummary:
+  allowed: 'The summary of an approved check'
+  declined: 'The summary of a declined check'
+days:
+  monday:
+    from: '09:00'
+    to: '17:00'
+    closed: false
+  tuesday:
+    from: '09:00'
+    to: '17:00'
+    closed: false
+  wednesday:
+    from: '09:00'
+    to: '17:00'
+    closed: false
+  thursday:
+    from: '09:00'
+    to: '17:00'
+    closed: false
+  friday:
+    from: '09:00'
+    to: '20:00'
+    closed: false
+  saturday:
+    closed: true #if day is closed, then PR will always be blocked on this day
+  sunday:
+    closed: true
 ```
 
 `
