@@ -1,4 +1,4 @@
-# timekeeper
+# Timekeeper
 
 > Allow merges only during specified times
 

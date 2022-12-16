@@ -1,6 +1,6 @@
 {
   "name": "timekeeper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Allow merges only during specified times",
   "author": "Saxon Jensen <saxonj@mailbox.org>",
@@ -13,11 +13,11 @@
   ],
   "scripts": {
     "build": "tsc",
-    "start": "probot run ./lib/index.js",
+    "start": "probot run ./dist/app.js",
     "test": "jest"
   },
   "dependencies": {
-    "probot": "^11.0.1"
+    "probot": "^12.2.8"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
