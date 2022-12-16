@@ -20,6 +20,7 @@
     "probot": "^12.2.8"
   },
   "devDependencies": {
+    "@types/pino-std-serializers": "^4.0.0",
     "@types/jest": "^26.0.19",
     "@types/node": "^14.14.19",
     "jest": "^26.6.3",
